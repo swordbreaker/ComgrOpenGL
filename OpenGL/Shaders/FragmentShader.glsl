@@ -5,6 +5,7 @@ out vec4 color;
 
 void main()
 {
-    //color = f_color * 0.1;
-	color = vec4(1.0, 1.0, 1.0, 1.0);
+    color = f_color;
+	//color = vec4(0.5, 0.5, 0.5, 1);
+    //gl_FragColor = vec4(1, 0, 0, 1);
 }
