@@ -69,6 +69,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Extentions.cs" />
+    <Compile Include="HeightMesh.cs" />
     <Compile Include="Texture.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -115,6 +116,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Textures\wood.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Textures\MatterhornHeightMap.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

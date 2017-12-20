@@ -23,6 +23,8 @@ namespace OpenGL
                 var beta = 1f;
                 var gamma = 2f;
 
+                var bla = new HeightMesh(@"Textures\\MatterhornHeightMap.png", 0);
+
                 w.Load += (o, ea) =>
                 {
                     //set up opengl
