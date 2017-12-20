@@ -4,7 +4,6 @@ namespace OpenGL
 {
     public static class Extentions
     {
-
         public static Matrix4 ToGlMatrix(this System.Numerics.Matrix4x4 m)
         {
             return new Matrix4(m.M11, m.M12, m.M13, m.M14,
