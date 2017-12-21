@@ -35,8 +35,12 @@ namespace OpenGL
             GL.BufferData(BufferTarget.ArrayBuffer, colors.Length * sizeof(float), colors, BufferUsageHint.StaticDraw);
 
             var vboNormals = GL.GenBuffer();
-            GL.BindBuffer(BufferTarget.ArrayBuffer, vboNormals);
-            GL.BufferData(BufferTarget.ArrayBuffer, normals.Length * sizeof(float), normals, BufferUsageHint.StaticDraw);
+            if (normals != null)
+            {
+                GL.BindBuffer(BufferTarget.ArrayBuffer, vboNormals);
+                GL.BufferData(BufferTarget.ArrayBuffer, normals.Length * sizeof(float), normals, BufferUsageHint.StaticDraw);
+            }
+
 
             var vboUvs = GL.GenBuffer();
             GL.BindBuffer(BufferTarget.ArrayBuffer, vboUvs);
@@ -55,23 +59,26 @@ namespace OpenGL
             GL.BindBuffer(BufferTarget.ArrayBuffer, vboColor);
             GL.VertexAttribPointer(GL.GetAttribLocation(hProgram, "v_color"), 4, VertexAttribPointerType.Float, false, 0, 0);
 
-            GL.EnableVertexAttribArray(GL.GetAttribLocation(hProgram, "v_normal"));
-            GL.BindBuffer(BufferTarget.ArrayBuffer, vboNormals);
-            GL.VertexAttribPointer(GL.GetAttribLocation(hProgram, "v_normal"), 3, VertexAttribPointerType.Float, true, 0, 0);
+            if (normals != null)
+            {
+                GL.EnableVertexAttribArray(GL.GetAttribLocation(hProgram, "v_normal"));
+                GL.BindBuffer(BufferTarget.ArrayBuffer, vboNormals);
+                GL.VertexAttribPointer(GL.GetAttribLocation(hProgram, "v_normal"), 3, VertexAttribPointerType.Float, true, 0, 0);
+            }
 
             GL.EnableVertexAttribArray(GL.GetAttribLocation(hProgram, "v_uv"));
             GL.BindBuffer(BufferTarget.ArrayBuffer, vboUvs);
             GL.VertexAttribPointer(GL.GetAttribLocation(hProgram, "v_uv"), 2, VertexAttribPointerType.Float, false, 0, 0);
         }
 
-        public void Render()
+        public void Render(PrimitiveType primitiveType)
         {
             GL.UniformMatrix4(GL.GetUniformLocation(_hProgramm, "m"), false, ref ViewModel);
 
             GL.BindVertexArray(_vaoTriangle);
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, _vboTriangleIndices);
 
-            GL.DrawElements(PrimitiveType.Triangles, _triangleLengt, DrawElementsType.UnsignedInt, 0);
+            GL.DrawElements(primitiveType, _triangleLengt, DrawElementsType.UnsignedInt, 0);
         }
     }
 }

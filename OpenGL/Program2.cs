@@ -1,16 +1,17 @@
 ﻿using System;
 using System.IO;
-using System.Numerics;
 using OpenTK;
 using OpenTK.Graphics.OpenGL4;
 using Vector4 = OpenTK.Vector4;
 
 namespace OpenGL
 {
-    internal static class Program
+    internal static class Program2
     {
         private static Texture _texture;
-        private static Mesh _cube;
+        private static HeightMesh _heigthMesh;
+
+        private static CameraHelper _cameraHelper = new CameraHelper(20, 20, 10);
 
         private static void Main()
         {
@@ -19,9 +20,7 @@ namespace OpenGL
                 int hProgram = 0;
                 var projection = Matrix4.CreatePerspectiveFieldOfView((float)Math.PI / 4, 1, 0.1f, 100);
 
-                var alpha = 0f;
-                var beta = 1f;
-                var gamma = 2f;
+                w.KeyDown += _cameraHelper.OnKeyDown;
 
                 w.Load += (o, ea) =>
                 {
@@ -35,7 +34,7 @@ namespace OpenGL
 
                     //load, compile and link shaders
                     //see https://www.khronos.org/opengl/wiki/Vertex_Shader
-                    var VertexShaderSource = File.ReadAllText(@"Shaders\VertexShader.glsl");
+                    var VertexShaderSource = File.ReadAllText(@"Shaders\VertexShaderHeightMap.glsl");
 
                     var hVertexShader = GL.CreateShader(ShaderType.VertexShader);
                     GL.ShaderSource(hVertexShader, VertexShaderSource);
@@ -63,12 +62,11 @@ namespace OpenGL
                     if (status != 1)
                         throw new Exception(GL.GetProgramInfoLog(hProgram));
 
-                    _cube = Figures.Cube(hProgram);
-
                     //Textures
                     GL.PixelStore(PixelStoreParameter.UnpackAlignment, 1);
 
-                    _texture = new Texture("Textures\\wood.jpg");
+                    _heigthMesh = new HeightMesh(@"Textures\MatterhornHeightMap.png", 200, hProgram);
+                    _texture = new Texture(@"Textures\wood.jpg");
 
                     {
                         //check for errors during all previous calls
@@ -77,6 +75,7 @@ namespace OpenGL
                             throw new Exception(error.ToString());
                     }
 
+                    GL.UseProgram(hProgram);
                 };
 
                 w.UpdateFrame += (o, fea) =>
@@ -84,44 +83,21 @@ namespace OpenGL
                     //perform logic
 
                     //time += fea.Time;
-
-                    alpha += 0.01f;
-                    beta += 0.02f;
-                    gamma += 0.03f;
                 };
 
                 w.RenderFrame += (o, fea) =>
-                {
+                {                    
                     //clear screen and z-buffer
                     GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-                    //switch to our shader
-                    GL.UseProgram(hProgram);
-
-                    GL.Uniform4(GL.GetUniformLocation(hProgram, "enviroment"), new Vector4(0.1f,0.1f,0.1f, 1));
+                    GL.Uniform4(GL.GetUniformLocation(hProgram, "enviroment"), new Vector4(0.1f, 0.1f, 0.1f, 1));
                     GL.Uniform1(GL.GetUniformLocation(hProgram, "texture1"), _texture);
 
                     GL.UniformMatrix4(GL.GetUniformLocation(hProgram, "p"), false, ref projection);
 
-                    var rotaM = Matrix4x4.CreateFromYawPitchRoll(alpha, alpha, alpha).ToGlMatrix();
-                    var translationM = Matrix4.CreateTranslation(0f, 0f, -10f);
+                    _heigthMesh.ViewModel = _cameraHelper.CameraMatrix;
 
-                    var m = rotaM * translationM;
-
-                    _cube.ViewModel = m;
-                    _cube.Render(PrimitiveType.Triangles);
-
-                    rotaM = Matrix4x4.CreateFromYawPitchRoll(beta, gamma, beta).ToGlMatrix();
-                    m = rotaM * Matrix4.CreateTranslation(3f, 3f, -10f);
-
-                    _cube.ViewModel = m;
-                    _cube.Render(PrimitiveType.Triangles);
-
-                    rotaM = Matrix4x4.CreateFromYawPitchRoll(gamma, alpha, gamma).ToGlMatrix();
-                    m = rotaM * Matrix4.CreateTranslation(-3f, -3f, -10f);
-
-                    _cube.ViewModel = m;
-                    _cube.Render(PrimitiveType.Triangles);
+                    _heigthMesh.Render(PrimitiveType.Triangles);
 
                     //display
                     w.SwapBuffers();

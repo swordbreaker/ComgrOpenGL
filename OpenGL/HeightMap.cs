@@ -5,13 +5,11 @@ using PixelFormat = OpenTK.Graphics.OpenGL4.PixelFormat;
 
 namespace OpenGL
 {
-    public class Texture
+    public class HeightMap
     {
-        internal static readonly object Lock = new object();
-        internal static int Count;
         public readonly int Id;
 
-        public Texture(string path)
+        public HeightMap(string path)
         {
             var textruesId = new int[1];
             GL.GenTextures(1, textruesId);
@@ -39,30 +37,30 @@ namespace OpenGL
                         var b = *(p++);
 
                         data[i + 0] = b;
-                        data[i + 1] = g;
-                        data[i + 2] = r;
+                        data[i + 1] = r;
+                        data[i + 2] = g;
                     }
                 }
             }
             bmp.UnlockBits(bitmapData);
 
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
-            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Srgb8, width, height, 0, PixelFormat.Rgb, PixelType.UnsignedByte, data);
+            //GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
+            //GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
+            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Srgb8, width, height, 0, PixelFormat.Red, PixelType.UnsignedByte, data);
 
-            lock (Lock)
+            lock (Texture.Lock)
             {
-                Id = Count;
-                GL.ActiveTexture(TextureUnit.Texture0 + Count);
+                Id = Texture.Count;
+                GL.ActiveTexture(TextureUnit.Texture0 + Texture.Count);
 
                 GL.BindTexture(TextureTarget.Texture2D, textruesId[0]);
-                Count++;
+                Texture.Count++;
             }
         }
 
-        public static implicit operator int(Texture texture)
+        public static implicit operator int(HeightMap heightMap)
         {
-            return texture.Id;
+            return heightMap.Id;
         }
     }
 }
