@@ -2,6 +2,7 @@
 using System.IO;
 using OpenTK;
 using OpenTK.Graphics.OpenGL4;
+using OpenTK.Input;
 using Vector4 = OpenTK.Vector4;
 
 namespace OpenGL
@@ -11,7 +12,7 @@ namespace OpenGL
         private static Texture _texture;
         private static HeightMesh _heigthMesh;
 
-        private static CameraHelper _cameraHelper = new CameraHelper(20, 20, 10);
+        private static CameraHelper _cameraHelper = new CameraHelper(0, 0, 5);
 
         private static void Main()
         {
@@ -21,6 +22,7 @@ namespace OpenGL
                 var projection = Matrix4.CreatePerspectiveFieldOfView((float)Math.PI / 4, 1, 0.1f, 100);
 
                 w.KeyDown += _cameraHelper.OnKeyDown;
+                w.MouseWheel += _cameraHelper.OnMouseWheel;
 
                 w.Load += (o, ea) =>
                 {
@@ -65,8 +67,8 @@ namespace OpenGL
                     //Textures
                     GL.PixelStore(PixelStoreParameter.UnpackAlignment, 1);
 
-                    _heigthMesh = new HeightMesh(@"Textures\test.png", 200, hProgram);
-                    _texture = new Texture(@"Textures\wood.jpg");
+                    _heigthMesh = new HeightMesh(@"Textures\MatterhornHeightMap.png", 500, hProgram);
+                    _texture = new Texture(@"Textures\05.JPG");
 
                     {
                         //check for errors during all previous calls
@@ -76,6 +78,9 @@ namespace OpenGL
                     }
 
                     GL.UseProgram(hProgram);
+
+                    GL.Uniform4(GL.GetUniformLocation(hProgram, "enviroment"), new Vector4(0f, 0f, 0f, 1));
+                    GL.Uniform1(GL.GetUniformLocation(hProgram, "texture1"), _texture);
                 };
 
                 w.UpdateFrame += (o, fea) =>
@@ -90,14 +95,11 @@ namespace OpenGL
                     //clear screen and z-buffer
                     GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-                    GL.Uniform4(GL.GetUniformLocation(hProgram, "enviroment"), new Vector4(0.1f, 0.1f, 0.1f, 1));
-                    GL.Uniform1(GL.GetUniformLocation(hProgram, "texture1"), _texture);
-
                     GL.UniformMatrix4(GL.GetUniformLocation(hProgram, "p"), false, ref projection);
 
-                    _heigthMesh.ViewModel = _cameraHelper.CameraMatrix;
+                    _heigthMesh.ViewModel = Matrix4.CreateRotationX(-(float)Math.PI/2) *  _cameraHelper.CameraMatrix;
 
-                    _heigthMesh.Render(PrimitiveType.Triangles);
+                    _heigthMesh.Render();
 
                     //display
                     w.SwapBuffers();

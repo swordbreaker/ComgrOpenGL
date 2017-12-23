@@ -24,7 +24,6 @@ namespace OpenGL
             var colors = new float[gridSize * gridSize * 4];
             var uvs = new float[gridSize * gridSize * 2];
             var idx = new int[(gridSize - 1) * (gridSize - 1) * 2 * 3];
-            var normals = new float[gridSize * gridSize * 3];
 
             CalculateVertex(gridSize, verts, colors, uvs);
 
@@ -51,6 +50,7 @@ namespace OpenGL
                 {
                     verts[vi + 0] = x;
                     verts[vi + 1] = y;
+                    verts[vi + 2] = 0;
 
                     colors[ci + 0] = 1;
                     colors[ci + 1] = 1;
@@ -95,33 +95,12 @@ namespace OpenGL
             }
         }
 
-        private void CalculateNormals(int gridSize, float[] normals, float[] verts)
-        {
-            var delta = 0.0001f;
-
-            //Vector3 ClacNormal(float x1, float y1, float x2, float y2)
-            //{
-            //    var v1 = new Vector3(2, 0, x1 - y1); // f(x + d, y) - f(x - d, y)
-            //    var v2 = new Vector3(0, 2 * delta, ); //f(x, y + d) - f(x, y - d)
-            //}
-
-
-            for (int y = 0; y < gridSize; y++)
-            {
-                for (int x = 0; x < gridSize; x++)
-                {
-
-                }
-            }
-        }
-
-
-        public void Render(PrimitiveType primitiveType)
+        public void Render()
         {
             GL.Uniform1(GL.GetUniformLocation(_hPorgram, "heightMap"), _heightMap);
-            GL.Uniform1(GL.GetUniformLocation(_hPorgram, "scale"), 5f);
+            GL.Uniform1(GL.GetUniformLocation(_hPorgram, "scale"), 0.5f);
 
-            _mesh.Render(primitiveType);
+            _mesh.Render(PrimitiveType.Triangles);
         }
     }
 }

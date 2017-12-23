@@ -1,4 +1,5 @@
-﻿using OpenTK;
+﻿using System;
+using OpenTK;
 using OpenTK.Input;
 using Vector3 = OpenTK.Vector3;
 using Vector4 = OpenTK.Vector4;
@@ -18,28 +19,34 @@ namespace OpenGL
             Radius = radius;
         }
 
+        public void OnMouseWheel(object sender, MouseWheelEventArgs mouseWheelEventArgs)
+        {
+            Radius -= mouseWheelEventArgs.Delta * 0.2f;
+            Radius = Math.Max(Radius, 0.001f);
+        }
+
         public void OnKeyDown(object sender, KeyboardKeyEventArgs keyEventArgs)
         {
             switch (keyEventArgs.Key)
             {
                 case Key.Up:
                 case Key.W:
-                    Elevation += 0.1f;
+                    Elevation += 0.05f;
                     //keyEventArgs.Handled = true;
                     break;
                 case Key.Down:
                 case Key.S:
-                    Elevation -= 0.1f;
+                    Elevation -= 0.05f;
                     //keyEventArgs.Handled = true;
                     break;
                 case Key.Left:
                 case Key.A:
-                    Azimut -= 0.1f;
+                    Azimut -= 0.05f;
                     //keyEventArgs.Handled = true;
                     break;
                 case Key.Right:
                 case Key.D:
-                    Azimut += 0.1f;
+                    Azimut += 0.05f;
                     //keyEventArgs.Handled = true;
                     break;
             }
