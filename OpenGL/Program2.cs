@@ -65,7 +65,7 @@ namespace OpenGL
                     //Textures
                     GL.PixelStore(PixelStoreParameter.UnpackAlignment, 1);
 
-                    _heigthMesh = new HeightMesh(@"Textures\MatterhornHeightMap.png", 200, hProgram);
+                    _heigthMesh = new HeightMesh(@"Textures\test.png", 200, hProgram);
                     _texture = new Texture(@"Textures\wood.jpg");
 
                     {

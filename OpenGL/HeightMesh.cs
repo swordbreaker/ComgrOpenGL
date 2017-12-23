@@ -99,11 +99,11 @@ namespace OpenGL
         {
             var delta = 0.0001f;
 
-            Vector3 ClacNormal(float x1, float y1, float x2, float y2)
-            {
-                var v1 = new Vector3(2 * delta, 0, x1 - y1); // f(x + d, y) - f(x - d, y)
-                var v2 = new Vector3(0, 2 * delta, ); //f(x, y + d) - f(x, y - d)
-            }
+            //Vector3 ClacNormal(float x1, float y1, float x2, float y2)
+            //{
+            //    var v1 = new Vector3(2, 0, x1 - y1); // f(x + d, y) - f(x - d, y)
+            //    var v2 = new Vector3(0, 2 * delta, ); //f(x, y + d) - f(x, y - d)
+            //}
 
 
             for (int y = 0; y < gridSize; y++)
