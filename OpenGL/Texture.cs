@@ -28,9 +28,9 @@ namespace OpenGL
                 var width = bmp.Width;
                 var height = bmp.Height;
                 var bitmapData = bmp.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadOnly,
-                    System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+                    System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 
-                var data = new byte[width * height * 3];
+                var data = new byte[width * height * 4];
 
                 unsafe
                 {
@@ -38,23 +38,25 @@ namespace OpenGL
                     var i = 0;
                     for (int y = 0; y < height; y++)
                     {
-                        for (int x = 0; x < width; x++, i += 3)
+                        for (int x = 0; x < width; x++, i += 4)
                         {
                             var r = *(p++);
                             var g = *(p++);
                             var b = *(p++);
+                            var a = *(p++);
 
                             data[i + 0] = b;
                             data[i + 1] = g;
                             data[i + 2] = r;
+                            data[i + 3] = a;
                         }
                     }
                 }
                 bmp.UnlockBits(bitmapData);
 
-                //GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
-                //GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
-                GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Srgb8, width, height, 0, PixelFormat.Rgb, PixelType.UnsignedByte, data);
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.LinearMipmapLinear);
+                GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Srgb8Alpha8, width, height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, data);
                 GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
             }
         }

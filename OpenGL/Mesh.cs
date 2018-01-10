@@ -31,8 +31,11 @@ namespace OpenGL
             GL.BufferData(BufferTarget.ElementArrayBuffer, idx.Length * sizeof(int), idx, BufferUsageHint.StaticDraw);
 
             var vboColor = GL.GenBuffer();
-            GL.BindBuffer(BufferTarget.ArrayBuffer, vboColor);
-            GL.BufferData(BufferTarget.ArrayBuffer, colors.Length * sizeof(float), colors, BufferUsageHint.StaticDraw);
+            if (colors != null)
+            {
+                GL.BindBuffer(BufferTarget.ArrayBuffer, vboColor);
+                GL.BufferData(BufferTarget.ArrayBuffer, colors.Length * sizeof(float), colors, BufferUsageHint.StaticDraw);
+            }
 
             var vboNormals = GL.GenBuffer();
             if (normals != null)
@@ -55,9 +58,12 @@ namespace OpenGL
             GL.BindBuffer(BufferTarget.ArrayBuffer, vboTriangleVertices);
             GL.VertexAttribPointer(GL.GetAttribLocation(hProgram, "pos"), 3, VertexAttribPointerType.Float, false, 0, 0);
 
-            GL.EnableVertexAttribArray(GL.GetAttribLocation(hProgram, "v_color"));
-            GL.BindBuffer(BufferTarget.ArrayBuffer, vboColor);
-            GL.VertexAttribPointer(GL.GetAttribLocation(hProgram, "v_color"), 4, VertexAttribPointerType.Float, false, 0, 0);
+            if (colors != null)
+            {
+                GL.EnableVertexAttribArray(GL.GetAttribLocation(hProgram, "v_color"));
+                GL.BindBuffer(BufferTarget.ArrayBuffer, vboColor);
+                GL.VertexAttribPointer(GL.GetAttribLocation(hProgram, "v_color"), 4, VertexAttribPointerType.Float, false, 0, 0);
+            }
 
             if (normals != null)
             {

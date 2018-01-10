@@ -7,7 +7,7 @@ using Vector4 = OpenTK.Vector4;
 
 namespace OpenGL
 {
-    internal static class Program
+    internal static class Program3
     {
         private static Texture _texture;
         private static Mesh _cube;
@@ -28,11 +28,13 @@ namespace OpenGL
                     //set up opengl
                     GL.ClearColor(0.5f, 0.5f, 0.5f, 0);
                     //GL.ClearDepth(1);
-                    GL.Enable(EnableCap.DepthTest);
+                    GL.Disable(EnableCap.DepthTest);
+                    GL.DepthMask(false);
                     //GL.DepthFunc(DepthFunction.Less);
                     GL.Disable(EnableCap.CullFace);
                     GL.Enable(EnableCap.FramebufferSrgb);
                     GL.Enable(EnableCap.Blend);
+                    GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.One);
 
                     //load, compile and link shaders
                     //see https://www.khronos.org/opengl/wiki/Vertex_Shader
@@ -46,7 +48,7 @@ namespace OpenGL
                         throw new Exception(GL.GetShaderInfoLog(hVertexShader));
 
                     //see https://www.khronos.org/opengl/wiki/Fragment_Shader
-                    var FragmentShaderSource = File.ReadAllText(@"Shaders\FragmentShader.glsl");
+                    var FragmentShaderSource = File.ReadAllText(@"Shaders\FragmentShaderTransparen.glsl");
 
                     var hFragmentShader = GL.CreateShader(ShaderType.FragmentShader);
                     GL.ShaderSource(hFragmentShader, FragmentShaderSource);
@@ -64,7 +66,7 @@ namespace OpenGL
                     if (status != 1)
                         throw new Exception(GL.GetProgramInfoLog(hProgram));
 
-                    _cube = Figures.Cube(hProgram);
+                    _cube = Figures.CubeTransparent(hProgram);
 
                     //Textures
                     GL.PixelStore(PixelStoreParameter.UnpackAlignment, 1);
@@ -99,7 +101,7 @@ namespace OpenGL
                     //switch to our shader
                     GL.UseProgram(hProgram);
 
-                    GL.Uniform4(GL.GetUniformLocation(hProgram, "enviroment"), new Vector4(0.1f,0.1f,0.1f, 1));
+                    GL.Uniform4(GL.GetUniformLocation(hProgram, "enviroment"), new Vector4(0f,0f,0f, 0f));
                     GL.Uniform1(GL.GetUniformLocation(hProgram, "texture1"), _texture);
 
                     GL.UniformMatrix4(GL.GetUniformLocation(hProgram, "p"), false, ref projection);

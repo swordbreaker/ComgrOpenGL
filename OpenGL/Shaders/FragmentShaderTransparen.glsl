@@ -1,4 +1,4 @@
-﻿#version 400 core
+#version 400 core
 
 in vec4 f_color;
 in vec2 f_uv;
@@ -11,7 +11,6 @@ out vec4 color;
 
 uniform sampler2D texture1;
 uniform vec4 enviroment;
-uniform sampler2D heightMap;
 
 void main()
 {
@@ -19,7 +18,7 @@ void main()
 
     vec3 l = normalize(f_lightPos.xyz - f_pos.xyz);
     float dotNL = dot(l, f_normal);
-    vec4 diffuse = max(0, dotNL) * f_color;
+    vec4 diffuse = max(0, dotNL) * texColor;
     vec3 r = 2 * max(0, dotNL) * f_normal - l;
     
     vec4 specular = pow(max(0, -dot(r, normalize(f_pos.xyz))), 50) * vec4(1);
@@ -28,7 +27,6 @@ void main()
     // d = clamp(d, 0, 1);
     // texColor = d * texColor + (1 - d) * vec4(1,1,1,1);
 
-    if(diffuse.a == 0) diffuse = vec4(vec3(1), 0);
 
-    color = (enviroment * f_color) + texColor * diffuse + specular;
+    color = (enviroment * texColor) + diffuse + specular;
 }

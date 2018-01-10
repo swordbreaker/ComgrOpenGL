@@ -35,7 +35,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>OpenGL.Program2</StartupObject>
+    <StartupObject>OpenGL.Program3</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
@@ -63,6 +63,7 @@
     <Compile Include="CameraHelper.cs" />
     <Compile Include="Extentions.cs" />
     <Compile Include="HeightMesh.cs" />
+    <Compile Include="Program3.cs" />
     <Compile Include="Program2.cs" />
     <Compile Include="Texture.cs" />
     <Compile Include="HeightMap.cs" />
@@ -97,6 +98,9 @@
     <None Include="Shaders\FragmentShader.glsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Shaders\FragmentShaderTransparen.glsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Shaders\VertexShaderHeightMap.glsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -129,6 +133,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Textures\05.JPG">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Textures\glasses.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
