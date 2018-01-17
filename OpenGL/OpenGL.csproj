@@ -35,7 +35,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>OpenGL.Program3</StartupObject>
+    <StartupObject>OpenGL.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
@@ -60,18 +60,22 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CameraHelper.cs" />
-    <Compile Include="Extentions.cs" />
-    <Compile Include="HeightMesh.cs" />
-    <Compile Include="Program3.cs" />
-    <Compile Include="Program2.cs" />
-    <Compile Include="Texture.cs" />
-    <Compile Include="HeightMap.cs" />
+    <Compile Include="Helpers\CameraHelper.cs" />
+    <Compile Include="Helpers\Extentions.cs" />
+    <Compile Include="Programs\IProgram.cs" />
+    <Compile Include="Models\GlProgram.cs" />
+    <Compile Include="Models\HeightMesh.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Programs\TransparenceProgram.cs" />
+    <Compile Include="Programs\HeightMapProgram.cs" />
+    <Compile Include="Models\ImageTexture.cs" />
+    <Compile Include="Models\HeightMap.cs" />
+    <Compile Include="Models\Texture.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Figures.cs" />
-    <Compile Include="Mesh.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="Helpers\Figures.cs" />
+    <Compile Include="Models\Mesh.cs" />
+    <Compile Include="Programs\RotatingCubes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

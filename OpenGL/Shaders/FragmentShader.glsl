@@ -11,11 +11,11 @@ out vec4 color;
 
 uniform sampler2D texture1;
 uniform vec4 enviroment;
-uniform sampler2D heightMap;
 
 void main()
 {
     vec4 texColor = texture(texture1, f_uv);
+    texColor.a = 1;
 
     vec3 l = normalize(f_lightPos.xyz - f_pos.xyz);
     float dotNL = dot(l, f_normal);
@@ -27,8 +27,6 @@ void main()
     // float d = dot(f_up.xyz, f_normal);
     // d = clamp(d, 0, 1);
     // texColor = d * texColor + (1 - d) * vec4(1,1,1,1);
-
-    if(diffuse.a == 0) diffuse = vec4(vec3(1), 0);
 
     color = (enviroment * f_color) + texColor * diffuse + specular;
 }

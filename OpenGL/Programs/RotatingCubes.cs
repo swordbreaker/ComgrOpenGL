@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Numerics;
 using OpenTK;
 using OpenTK.Graphics.OpenGL4;
@@ -7,16 +6,17 @@ using Vector4 = OpenTK.Vector4;
 
 namespace OpenGL
 {
-    internal static class Program3
+    internal class RotatingCubes : IProgram
     {
-        private static Texture _texture;
-        private static Mesh _cube;
+        private ImageTexture _imageTexture;
+        private Mesh _cube;
 
-        private static void Main()
+        private GlProgram _program;
+
+        public void Run()
         {
             using (var w = new GameWindow(720, 480, null, "ComGr", GameWindowFlags.Default, DisplayDevice.Default, 4, 0, OpenTK.Graphics.GraphicsContextFlags.ForwardCompatible))
             {
-                int hProgram = 0;
                 var projection = Matrix4.CreatePerspectiveFieldOfView((float)Math.PI / 4, 1, 0.1f, 100);
 
                 var alpha = 0f;
@@ -28,50 +28,20 @@ namespace OpenGL
                     //set up opengl
                     GL.ClearColor(0.5f, 0.5f, 0.5f, 0);
                     //GL.ClearDepth(1);
-                    GL.Disable(EnableCap.DepthTest);
-                    GL.DepthMask(false);
+                    GL.Enable(EnableCap.DepthTest);
                     //GL.DepthFunc(DepthFunction.Less);
                     GL.Disable(EnableCap.CullFace);
                     GL.Enable(EnableCap.FramebufferSrgb);
                     GL.Enable(EnableCap.Blend);
-                    GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.One);
 
-                    //load, compile and link shaders
-                    //see https://www.khronos.org/opengl/wiki/Vertex_Shader
-                    var VertexShaderSource = File.ReadAllText(@"Shaders\VertexShader.glsl");
+                    _program = new GlProgram(@"Shaders\VertexShader.glsl", @"Shaders\FragmentShader.glsl");
 
-                    var hVertexShader = GL.CreateShader(ShaderType.VertexShader);
-                    GL.ShaderSource(hVertexShader, VertexShaderSource);
-                    GL.CompileShader(hVertexShader);
-                    GL.GetShader(hVertexShader, ShaderParameter.CompileStatus, out int status);
-                    if (status != 1)
-                        throw new Exception(GL.GetShaderInfoLog(hVertexShader));
-
-                    //see https://www.khronos.org/opengl/wiki/Fragment_Shader
-                    var FragmentShaderSource = File.ReadAllText(@"Shaders\FragmentShaderTransparen.glsl");
-
-                    var hFragmentShader = GL.CreateShader(ShaderType.FragmentShader);
-                    GL.ShaderSource(hFragmentShader, FragmentShaderSource);
-                    GL.CompileShader(hFragmentShader);
-                    GL.GetShader(hFragmentShader, ShaderParameter.CompileStatus, out status);
-                    if (status != 1)
-                        throw new Exception(GL.GetShaderInfoLog(hFragmentShader));
-
-                    //link shaders to a program
-                    hProgram = GL.CreateProgram();
-                    GL.AttachShader(hProgram, hFragmentShader);
-                    GL.AttachShader(hProgram, hVertexShader);
-                    GL.LinkProgram(hProgram);
-                    GL.GetProgram(hProgram, GetProgramParameterName.LinkStatus, out status);
-                    if (status != 1)
-                        throw new Exception(GL.GetProgramInfoLog(hProgram));
-
-                    _cube = Figures.CubeTransparent(hProgram);
+                    _cube = Figures.Cube(_program);
 
                     //Textures
                     GL.PixelStore(PixelStoreParameter.UnpackAlignment, 1);
 
-                    _texture = new Texture("Textures\\glasses.png");
+                    _imageTexture = new ImageTexture("Textures\\05.JPG");
 
                     {
                         //check for errors during all previous calls
@@ -99,12 +69,12 @@ namespace OpenGL
                     GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
                     //switch to our shader
-                    GL.UseProgram(hProgram);
+                    _program.Use();
 
-                    GL.Uniform4(GL.GetUniformLocation(hProgram, "enviroment"), new Vector4(0f,0f,0f, 0f));
-                    GL.Uniform1(GL.GetUniformLocation(hProgram, "texture1"), _texture);
+                    GL.Uniform4(GL.GetUniformLocation(_program, "enviroment"), new Vector4(0.1f,0.1f,0.1f, 1));
+                    GL.Uniform1(GL.GetUniformLocation(_program, "texture1"), _imageTexture);
 
-                    GL.UniformMatrix4(GL.GetUniformLocation(hProgram, "p"), false, ref projection);
+                    GL.UniformMatrix4(GL.GetUniformLocation(_program, "p"), false, ref projection);
 
                     var rotaM = Matrix4x4.CreateFromYawPitchRoll(alpha, alpha, alpha).ToGlMatrix();
                     var translationM = Matrix4.CreateTranslation(0f, 0f, -10f);

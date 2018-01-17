@@ -18,15 +18,16 @@ void main()
 
     vec3 l = normalize(f_lightPos.xyz - f_pos.xyz);
     float dotNL = dot(l, f_normal);
+    dotNL = max(dotNL, 1 - dotNL); //try normals in both directions
     vec4 diffuse = max(0, dotNL) * texColor;
     vec3 r = 2 * max(0, dotNL) * f_normal - l;
     
-    vec4 specular = pow(max(0, -dot(r, normalize(f_pos.xyz))), 50) * vec4(1);
+    vec4 specular = pow(max(0, -dot(r, normalize(f_pos.xyz))), 5) * vec4(0.5);
 
     // float d = dot(f_up.xyz, f_normal);
     // d = clamp(d, 0, 1);
     // texColor = d * texColor + (1 - d) * vec4(1,1,1,1);
-
+    //vec4 diffTex = vec4(diffuse.rgb * texColor.rgb, max(diffuse.a, texColor.a));
 
     color = (enviroment * texColor) + diffuse + specular;
 }

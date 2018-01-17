@@ -2,9 +2,23 @@
 {
     public static class Figures
     {
-        public static Mesh CubeTransparent(int hProgramm) => new Mesh(
-            verts: new float[]
+        public static Mesh CubeTransparent(int hProgramm)
+        {
+            var colors = new float[24 * 4];
+
+            int k = 0;
+            for (int i = 0; i < 24; i++, k += 4)
             {
+                colors[k + 0] = 1;
+                colors[k + 1] = 1;
+                colors[k + 2] = 1;
+                colors[k + 3] = 1;
+            }
+            colors = null;
+
+            return new Mesh(
+               verts: new float[]
+               {
                 -1, -1, -1,
                 +1, -1, -1,
                 +1, +1, -1,
@@ -34,9 +48,9 @@
                 +1, -1, +1,
                 +1, -1, -1,
                 -1, -1, -1,
-            },
-            idx: new int[]
-            {
+               },
+               idx: new int[]
+               {
                 0,   1,  2,
                 0,   2,  3,
                 7,   6,  5,
@@ -51,10 +65,10 @@
                 16, 17, 18,
                 20, 21, 22,
                 22, 23, 20,
-            },
-            colors: null,
-            normals: new float[]
-            {
+               },
+               colors: colors,
+               normals: new float[]
+               {
                 0,0,-1,
                 0,0,-1,
                 0,0,-1,
@@ -84,9 +98,9 @@
                 0,-1,0,
                 0,-1,0,
                 0,-1,0,
-            },
-            uvs: new float[]
-            {
+               },
+               uvs: new float[]
+               {
                 0,1,
                 1,1,
                 1,0,
@@ -116,9 +130,10 @@
                 1,1,
                 1,0,
                 0,0,
-            },
-            hProgram: hProgramm
-            );
+               },
+               hProgram: hProgramm
+               );
+        }
 
         public static Mesh Cube(int hProgramm) => new Mesh(
         verts: new float[]
@@ -175,32 +190,32 @@
         1,0,0,1,
         0,1,0,1,
         0,0,1,1,
-        1,1,0,0,
+        1,1,0,1,
 
         1,0,0,1,
         0,1,0,1,
         0,0,1,1,
-        1,1,0,0,
+        1,1,0,1,
 
         1,0,0,1,
         0,1,0,1,
         0,0,1,1,
-        1,1,0,0,
+        1,1,0,1,
 
         1,0,0,1,
         0,1,0,1,
         0,0,1,1,
-        1,1,0,0,
+        1,1,0,1,
 
         1,0,0,1,
         0,1,0,1,
         0,0,1,1,
-        1,1,0,0,
+        1,1,0,1,
 
         1,0,0,1,
         0,1,0,1,
         0,0,1,1,
-        1,1,0,0,
+        1,1,0,1,
         },
         normals: new float[]
         {

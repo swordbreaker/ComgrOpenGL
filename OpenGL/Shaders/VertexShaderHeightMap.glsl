@@ -23,8 +23,8 @@ vec3 calcNormal(const in vec2 pos);
 void main()
 {
     float h = texture(heightMap, v_uv).r * scale;
-    vec3 newPos = vec3(pos.x, pos.y, pos.z + h);
 
+    vec3 newPos = vec3(pos.x, pos.y, pos.z + h);
     vec3 normal = calcNormal(v_uv);
 
     f_pos = m * vec4(newPos,1);
